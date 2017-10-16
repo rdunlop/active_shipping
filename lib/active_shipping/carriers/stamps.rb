@@ -492,7 +492,9 @@ module ActiveShipping
       end
 
       # Renew the Authenticator if it has expired and retry the request
-      if error_code && error_code.downcase == '002b0202'
+      # Error code reference:
+      # http://developer.stamps.com/assets/documents/developer/downloads/Stamps.com_SWSIM_Reference_v42.pdf
+      if error_code && ['002b0202', '002b0203', '002b0204'].include?(error_code.downcase)
         request = renew_authenticator(last_request)
         commit(last_swsim_method, request)
       else
